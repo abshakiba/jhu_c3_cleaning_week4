@@ -63,3 +63,6 @@ df_p4$Target <- NULL
 df_p5 <-aggregate(. ~subject + ActivityLabel, df_p4, mean)
 tidy <- df_p5
 str(tidy)
+
+# Output:
+write.table(tidy, file="tidy.txt", row.name=F, sep=" ")
