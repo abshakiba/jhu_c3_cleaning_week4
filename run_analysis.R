@@ -1,8 +1,3 @@
-# Data Science Specialization - JHU
-# #3: Getting and Cleaning Data
-# Programming Assignment - Week 4
-# Abbas Shakiba
-
 library(dplyr)
 
 
@@ -39,24 +34,25 @@ names(df_p2) <- c("subject",names(df_tmp),"Target")
 
 # Part 3:
 # Uses descriptive activity names to name the activities in the data set
-names(df_p2)<-gsub("^t", "time", names(df_p2))
-names(df_p2)<-gsub("^f", "frequency", names(df_p2))
-names(df_p2)<-gsub("Acc", "Accelerometer", names(df_p2))
-names(df_p2)<-gsub("Gyro", "Gyroscope", names(df_p2))
-names(df_p2)<-gsub("Mag", "Magnitude", names(df_p2))
-names(df_p2)<-gsub("BodyBody", "Body", names(df_p2))
-names(df_p2)<-gsub("-mean()-", "Mean", names(df_p2))
-names(df_p2)<-gsub("-std()-", "STD", names(df_p2))
-names(df_p2)<-gsub("-freq()-", "Frequency", names(df_p2))
-df_p3 <- df_p2
+activities <- read.table("activity_labels.txt", header = FALSE, sep="")
+names(activities) <- c("Code", "ActivityLabel")
+df_p3 <- left_join(df_p2,activities,by=c("Target"="Code"))
+df_p3$Target <- NULL 
+
 
 
 # Part 4:
 # Appropriately labels the data set with descriptive variable names.
-activities <- read.table("activity_labels.txt", header = FALSE, sep="")
-names(activities) <- c("Code", "ActivityLabel")
-df_p4 <- left_join(df_p3,activities,by=c("Target"="Code"))
-df_p4$Target <- NULL 
+names(df_p3)<-gsub("^t", "time", names(df_p3))
+names(df_p3)<-gsub("^f", "frequency", names(df_p3))
+names(df_p3)<-gsub("Acc", "Accelerometer", names(df_p3))
+names(df_p3)<-gsub("Gyro", "Gyroscope", names(df_p3))
+names(df_p3)<-gsub("Mag", "Magnitude", names(df_p3))
+names(df_p3)<-gsub("BodyBody", "Body", names(df_p3))
+names(df_p3)<-gsub("-mean()-", "Mean", names(df_p3))
+names(df_p3)<-gsub("-std()-", "STD", names(df_p3))
+names(df_p3)<-gsub("-freq()-", "Frequency", names(df_p3))
+df_p4 <- df_p3
 
 # Part 5:
 # From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
@@ -64,5 +60,5 @@ df_p5 <-aggregate(. ~subject + ActivityLabel, df_p4, mean)
 tidy <- df_p5
 str(tidy)
 
-# Output:
 write.table(tidy, file="tidy.txt", row.name=F, sep=" ")
+
